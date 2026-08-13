@@ -2,6 +2,7 @@
   "name": "教师课表",
   "short_name": "教师课表",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "theme_color": "#2563eb",
   "background_color": "#f3f6fa",

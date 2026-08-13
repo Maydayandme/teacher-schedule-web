@@ -15,6 +15,8 @@ const viewTabs = document.querySelectorAll(".view-tab");
 const scheduleFile = document.querySelector("#schedule-file");
 const restoreSchedule = document.querySelector("#restore-schedule");
 const importStatus = document.querySelector("#import-status");
+const installApp = document.querySelector("#install-app");
+let deferredInstallPrompt = null;
 
 let schedule = null;
 let viewMode = "today";
@@ -57,6 +59,46 @@ function setImportStatus(message, type = "") {
   importStatus.textContent = message;
   importStatus.className = `import-status${type ? ` ${type}` : ""}`;
 }
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installApp.hidden = false;
+  installApp.disabled = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installApp.hidden = true;
+  installApp.disabled = false;
+  setImportStatus("教师课表已安装到手机", "success");
+});
+
+installApp.addEventListener("click", async () => {
+  if (!deferredInstallPrompt) {
+    setImportStatus("请使用 Chrome 打开本页面后再点击安装到手机。");
+    return;
+  }
+
+  installApp.disabled = true;
+  try {
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    if (choice.outcome === "accepted") {
+      installApp.hidden = true;
+      setImportStatus("教师课表已安装到手机", "success");
+    }
+  } catch (error) {
+    deferredInstallPrompt = null;
+    setImportStatus("请使用 Chrome 打开本页面后再点击安装到手机。");
+    console.warn("PWA 安装提示失败", error);
+  } finally {
+    if (!installApp.hidden) {
+      installApp.disabled = false;
+    }
+  }
+});
 
 function validateSchedule(candidate) {
   if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
