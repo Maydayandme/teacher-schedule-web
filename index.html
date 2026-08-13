@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>教师课表</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <h1>教师课表</h1>
+      <p id="date-summary" class="date-summary">正在读取课表…</p>
+      <div class="schedule-actions">
+        <label class="small-button import-button" for="schedule-file">导入课表</label>
+        <input id="schedule-file" type="file" accept=".json,application/json" hidden>
+        <button id="restore-schedule" class="small-button secondary-button" type="button">清除当前课表</button>
+      </div>
+      <p id="import-status" class="import-status" aria-live="polite"></p>
+    </header>
+    <nav class="view-tabs" aria-label="课表视图">
+      <button id="today-tab" class="view-tab is-active" type="button" data-view="today">今日</button>
+      <button id="week-tab" class="view-tab" type="button" data-view="week">本周</button>
+    </nav>
+    <section id="week-controls" class="week-controls" hidden>
+      <div class="week-navigation">
+        <button id="previous-week" class="week-button" type="button">← 上一周</button>
+        <span id="week-label" class="week-label"></span>
+        <button id="next-week" class="week-button" type="button">下一周 →</button>
+      </div>
+      <button id="current-week" class="current-week-button" type="button" hidden>回到本周</button>
+    </section>
+    <section id="status" class="status" aria-live="polite"></section>
+    <section id="lesson-list" class="lesson-list" aria-live="polite"></section>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch((error) => {
+          console.warn("Service Worker 注册失败", error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
