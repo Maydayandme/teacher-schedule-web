@@ -1,12 +1,16 @@
-const CACHE_NAME = "teacher-schedule-v3";
+const CACHE_NAME = "teacher-schedule-v4";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./service-worker.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+  "./icons/icon-180.png",
+  "./icons/icon-maskable-512.png",
+  "./images/background-soft.jpg"
 ];
 
 self.addEventListener("install", (event) => {
